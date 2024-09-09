@@ -16,15 +16,14 @@ export default defineNuxtPlugin((nuxtApp) => {
     appId: config.public.VITE_FIREBASE_APP_ID as string,
   };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
+  const firebaseApp = initializeApp(firebaseConfig);
+  const auth = getAuth(firebaseApp);
+  const db = getFirestore(firebaseApp);
 
   return {
     provide: {
-      firebaseApp: app,
-      db,
       auth,
+      db,
     },
   };
 });
