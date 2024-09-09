@@ -5,13 +5,13 @@ import { ref } from "vue";
 import { navigateTo, useNuxtApp } from "nuxt/app";
 import { logger } from "../utils/helpers";
 import { FirebaseError } from "firebase/app";
-import { doc, setDoc, getDoc, Firestore } from "firebase/firestore/lite";
+import { doc, setDoc, getDoc, type Firestore } from "firebase/firestore/lite";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  Auth,
+  type Auth,
 } from "firebase/auth";
 
 export default function useAuth() {

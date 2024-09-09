@@ -13,7 +13,7 @@ import {
   updateDoc,
   deleteDoc,
   collection,
-  Firestore,
+  type Firestore,
 } from "firebase/firestore/lite";
 
 export default function useTask() {
