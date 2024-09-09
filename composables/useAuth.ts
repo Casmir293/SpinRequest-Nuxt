@@ -1,17 +1,17 @@
-import { useToast } from "vue-toastification";
+import { toast } from "vue3-toastify";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../stores/userStore";
 import { ref } from "vue";
 import { navigateTo, useNuxtApp } from "nuxt/app";
 import { logger } from "../utils/helpers";
 import { FirebaseError } from "firebase/app";
-import { doc, setDoc, getDoc, Firestore } from "firebase/firestore/lite";
+import { doc, setDoc, getDoc, type Firestore } from "firebase/firestore/lite";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  Auth,
+  type Auth,
 } from "firebase/auth";
 
 export default function useAuth() {
@@ -20,7 +20,6 @@ export default function useAuth() {
   const $auth = nuxtApp.$auth as Auth;
   const { user, userId, myProfile, isLoggedIn } = storeToRefs(useUserStore());
   const USER_STORE = useUserStore();
-  const toast = useToast();
   const isLoading = ref(false);
   const error = ref<FirebaseError | string | null>(null);
 
@@ -85,9 +84,7 @@ export default function useAuth() {
       await whoAmI(profileId);
       navigateTo("/");
 
-      toast.success("Sign in successful", {
-        timeout: 3000,
-      });
+      toast.success("Sign in successful");
     } catch (err: any) {
       error.value = err;
 

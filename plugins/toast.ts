@@ -1,11 +1,11 @@
 import { defineNuxtPlugin } from "nuxt/app";
-import Toast, { PluginOptions } from "vue-toastification";
-import "vue-toastification/dist/index.css";
+import Vue3Toastify, { type ToastContainerOptions } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
-const options: PluginOptions = {
-  timeout: 3000,
+const options: ToastContainerOptions = {
+  autoClose: 3000,
 };
 
 export default defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.vueApp.use(Toast, options);
+  nuxtApp.vueApp.use(Vue3Toastify, options);
 });

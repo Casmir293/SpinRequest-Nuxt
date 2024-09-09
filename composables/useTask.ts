@@ -1,5 +1,5 @@
 import { useNuxtApp } from "nuxt/app";
-import { useToast } from "vue-toastification";
+import { toast } from "vue3-toastify";
 import { storeToRefs } from "pinia";
 import { useTaskStore } from "../stores/taskStore";
 import useAuth from "./useAuth";
@@ -13,7 +13,7 @@ import {
   updateDoc,
   deleteDoc,
   collection,
-  Firestore,
+  type Firestore,
 } from "firebase/firestore/lite";
 
 export default function useTask() {
@@ -21,7 +21,6 @@ export default function useTask() {
   const { tasks } = storeToRefs(useTaskStore());
   const TASK_STORE = useTaskStore();
   const { userId } = useAuth();
-  const toast = useToast();
   const isLoading = ref(false);
   const error = ref<FirebaseError | string | null>(null);
 

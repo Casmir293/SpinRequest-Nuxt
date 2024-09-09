@@ -27,9 +27,7 @@
 </template>
 
 <script setup>
-import { useToast } from "vue-toastification";
-
-const toast = useToast();
+import { toast } from "vue3-toastify";
 
 function showToast() {
   toast.success("This is a toast notification!");
