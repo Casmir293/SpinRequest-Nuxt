@@ -19,6 +19,11 @@
       <v-icon color="warning"></v-icon>
     </template>
   </v-btn>
+
+  <NuxtLayout>
+    <NuxtLoadingIndicator />
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 
 <script setup>
