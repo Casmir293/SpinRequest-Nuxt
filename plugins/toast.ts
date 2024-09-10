@@ -3,9 +3,11 @@ import Vue3Toastify, { type ToastContainerOptions } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
 const options: ToastContainerOptions = {
-  autoClose: 3000,
+  autoClose: 2500,
 };
 
 export default defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.vueApp.use(Vue3Toastify, options);
+  if (import.meta.client) {
+    nuxtApp.vueApp.use(Vue3Toastify, options);
+  }
 });

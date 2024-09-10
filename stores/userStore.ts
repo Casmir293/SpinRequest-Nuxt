@@ -6,11 +6,14 @@ export const useUserStore = defineStore(
   "user",
   () => {
     const user = ref<any | null>(null);
+    const token = ref<string | null>(null);
     const authState = ref<any | null>(null);
     const userId = ref<UserId>(null);
     const myProfile = ref<MyProfile | null>(null);
 
-    const isLoggedIn = computed(() => user.value !== null);
+    const isLoggedIn = computed(() => {
+      return user.value !== null;
+    });
 
     const updateUser = (newUser: any) => {
       user.value = newUser;
@@ -27,6 +30,7 @@ export const useUserStore = defineStore(
 
     const clearUserData = () => {
       user.value = null;
+      token.value = null;
       userId.value = null;
       myProfile.value = null;
       authState.value = null;
@@ -34,6 +38,7 @@ export const useUserStore = defineStore(
 
     return {
       user,
+      token,
       authState,
       userId,
       myProfile,

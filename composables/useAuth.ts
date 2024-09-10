@@ -29,20 +29,24 @@ export default function useAuth() {
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
-        await logOut();
-        toast.error("User doesn't exist");
+        logOut();
+        if (import.meta.client) {
+          toast.error("User doesn't exist");
+        }
         return;
       }
 
       USER_STORE.updateProfile(docSnap.data() as MyProfile);
     } catch (err: any) {
       error.value = err;
-      await logOut();
       logger("Error fetching user ==>", error);
-      if (err instanceof FirebaseError) {
-        toast.error(`Fetch profile failed: ${err.code}`);
-      } else {
-        toast.error(`Fetch profile failed: ${err}`);
+
+      if (import.meta.client) {
+        if (err instanceof FirebaseError) {
+          toast.error(`Fetch profile failed: ${err.code}`);
+        } else {
+          toast.error(`Fetch profile failed: ${err}`);
+        }
       }
     }
   };
@@ -57,43 +61,55 @@ export default function useAuth() {
         password,
       );
       await setDoc(doc($db, "users", payload.user.uid), { name, email });
-      navigateTo("/auth/signin");
-      toast.success("Account Created! Sign in.");
+      navigateTo("/auth/login");
+      if (import.meta.client) {
+        toast.success("Account Created! Sign in.");
+      }
     } catch (err: any) {
       error.value = err;
       logger("Error signing up ==>", error);
-      if (err instanceof FirebaseError) {
-        toast.error(`Sign up failed: ${err.code}`);
-      } else {
-        toast.error(`Sign up failed: ${err}`);
+      if (import.meta.client) {
+        if (err instanceof FirebaseError) {
+          toast.error(`Sign up failed: ${err.code}`);
+        } else {
+          toast.error(`Sign up failed: ${err}`);
+        }
       }
     } finally {
       isLoading.value = false;
     }
   };
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string, redirect = true) => {
     isLoading.value = true;
 
     try {
       const payload = await signInWithEmailAndPassword($auth, email, password);
+      const idToken = await payload.user.getIdToken();
+
       USER_STORE.user = payload.user;
       USER_STORE.userId = payload.user.uid;
-      const profileId = payload.user.uid;
+      USER_STORE.token = idToken;
+      useCookie("token").value = idToken;
+      useCookie("profileID").value = payload.user.uid;
 
-      await whoAmI(profileId);
-      navigateTo("/");
-
-      toast.success("Sign in successful");
+      if (redirect) {
+        await nuxtApp.runWithContext(() => navigateTo("/"));
+      }
+      if (import.meta.client) {
+        toast.success("Sign in successful");
+      }
     } catch (err: any) {
       error.value = err;
 
       logger("Error signing in ==>", error);
 
-      if (err instanceof FirebaseError) {
-        toast.error(`Sign in failed: ${err.code}`);
-      } else {
-        toast.error(`Sign in failed: ${err}`);
+      if (import.meta.client) {
+        if (err instanceof FirebaseError) {
+          toast.error(`Sign in failed: ${err.code}`);
+        } else {
+          toast.error(`Sign in failed: ${err}`);
+        }
       }
     } finally {
       isLoading.value = false;
@@ -108,32 +124,43 @@ export default function useAuth() {
     } catch (err: any) {
       error.value = err;
       logger("Error determining auth state ==>", error);
-      if (err instanceof FirebaseError) {
-        toast.error(`Auth state failed: ${err.code}`);
-      } else {
-        toast.error(`Auth state failed: ${err}`);
+
+      if (import.meta.client) {
+        if (err instanceof FirebaseError) {
+          toast.error(`Auth state failed: ${err.code}`);
+        } else {
+          toast.error(`Auth state failed: ${err}`);
+        }
       }
     }
   };
 
-  const logOut = async () => {
-    isLoading.value = true;
+  const logOut = () => {
+    nuxtApp.runWithContext(async () => {
+      try {
+        const token = useCookie("token");
+        const profileID = useCookie("profileID");
+        token.value = "";
+        profileID.value = "";
+        USER_STORE.clearUserData();
+        await signOut($auth);
+        if (import.meta.client) {
+          localStorage.clear();
+          sessionStorage.clear();
+        }
+      } catch (err: any) {
+        error.value = err;
+        logger("Error logging out ==>", error);
 
-    try {
-      USER_STORE.clearUserData();
-      await signOut($auth);
-      navigateTo("/auth/signin");
-    } catch (err: any) {
-      error.value = err;
-      logger("Error logging out ==>", error);
-      if (err instanceof FirebaseError) {
-        toast.error(`Logout failed: ${err.code}`);
-      } else {
-        toast.error(`Logout failed: ${err}`);
+        if (import.meta.client) {
+          if (err instanceof FirebaseError) {
+            toast.error(`Logout failed: ${err.code}`);
+          } else {
+            toast.error(`Logout failed: ${err}`);
+          }
+        }
       }
-    } finally {
-      isLoading.value = false;
-    }
+    });
   };
 
   return {
