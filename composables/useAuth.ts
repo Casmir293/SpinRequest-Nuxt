@@ -122,7 +122,7 @@ export default function useAuth() {
     try {
       USER_STORE.clearUserData();
       await signOut($auth);
-      navigateTo("/auth/signin");
+      navigateTo("/auth/logout");
     } catch (err: any) {
       error.value = err;
       logger("Error logging out ==>", error);

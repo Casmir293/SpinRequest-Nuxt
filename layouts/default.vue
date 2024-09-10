@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import useAuth from "../composables/useAuth";
-
 const { myProfile } = useAuth();
 
 const drawer = ref(true);
@@ -34,17 +31,17 @@ const rail = ref(true);
         <v-divider></v-divider>
 
         <v-list density="compact" nav>
-          <router-link :to="{ name: 'SignOut' }">
+          <nuxt-link to="/auth/logout">
             <v-list-item
               prepend-icon="mdi-logout"
               title="Logout"
               value="logout"
             ></v-list-item>
-          </router-link>
+          </nuxt-link>
         </v-list>
       </v-navigation-drawer>
       <v-main class="m-4">
-        <!-- <RouterView /> -->
+        <slot />
       </v-main>
     </v-layout>
   </v-card>
