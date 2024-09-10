@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { toast } from "vue3-toastify";
-const { myProfile } = useAuth();
 
 definePageMeta({
   middleware: "auth",
 });
+
+const { myProfile } = useAuth();
 
 function showToast() {
   toast.success("This is a toast notification!");
