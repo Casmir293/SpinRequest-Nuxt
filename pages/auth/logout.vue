@@ -5,8 +5,8 @@ definePageMeta({
 
 const { logOut } = useAuth();
 
-onMounted(async () => {
-  await logOut();
+onMounted(() => {
+  logOut();
   setTimeout(() => {
     navigateTo("/auth/login");
   }, 2000);

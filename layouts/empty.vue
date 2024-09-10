@@ -13,7 +13,7 @@
 <style scoped>
 .empty-layout {
   @apply flex h-screen w-screen animate-pulse items-center justify-center;
-  animation: pulse 1s infinite;
+  animation: pulse 2s infinite;
 }
 
 @keyframes pulse {

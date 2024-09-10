@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { toast } from "vue3-toastify";
+const { myProfile } = useAuth();
+
+definePageMeta({
+  middleware: "auth",
+});
 
 function showToast() {
   toast.success("This is a toast notification!");
@@ -8,21 +13,19 @@ function showToast() {
 
 <template>
   <h1 class="text-3xl font-bold underline">Hello world!</h1>
-  <button
-    @click="showToast"
-    class="bg-sky-700 px-4 py-2 text-white hover:bg-sky-800 sm:px-8 sm:py-3"
-  >
-    ...testing
-  </button>
-  <v-btn> Button </v-btn>
 
-  <v-btn append-icon="mdi-account-circle" prepend-icon="mdi-check-circle">
+  <p class="my-5 text-2xl">
+    Welcome, <b>{{ myProfile?.name }}</b>
+  </p>
+  <v-btn
+    @click="showToast"
+    append-icon="mdi-account-circle"
+    prepend-icon="mdi-check-circle"
+  >
     <template v-slot:prepend>
       <v-icon color="success"></v-icon>
     </template>
-
-    Button
-
+    Click Me!
     <template v-slot:append>
       <v-icon color="warning"></v-icon>
     </template>

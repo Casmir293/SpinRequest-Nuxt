@@ -2,6 +2,7 @@
 import { ref, reactive } from "vue";
 definePageMeta({
   layout: "auth",
+  middleware: "guest",
 });
 
 const { isLoading, signIn } = useAuth();
