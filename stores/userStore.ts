@@ -1,7 +1,3 @@
-import { ref, computed } from "vue";
-import { defineStore } from "pinia";
-import persist from "pinia-plugin-persistedstate";
-
 export const useUserStore = defineStore(
   "user",
   () => {
@@ -15,20 +11,7 @@ export const useUserStore = defineStore(
       return user.value !== null;
     });
 
-    const updateUser = (newUser: any) => {
-      user.value = newUser;
-      userId.value = newUser?.uid ?? null;
-    };
-
-    const updateProfile = (profile: MyProfile) => {
-      myProfile.value = profile;
-    };
-
-    const updateAuthState = (state: any) => {
-      authState.value = state;
-    };
-
-    const clearUserData = () => {
+    const resetUserData = () => {
       user.value = null;
       token.value = null;
       userId.value = null;
@@ -43,10 +26,7 @@ export const useUserStore = defineStore(
       userId,
       myProfile,
       isLoggedIn,
-      updateUser,
-      updateProfile,
-      updateAuthState,
-      clearUserData,
+      resetUserData,
     };
   },
   {

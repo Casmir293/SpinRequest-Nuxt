@@ -1,4 +1,3 @@
-import { defineNuxtPlugin, useRuntimeConfig } from "nuxt/app";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore/lite";
 import { getAuth } from "firebase/auth";

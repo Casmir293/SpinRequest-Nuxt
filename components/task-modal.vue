@@ -46,32 +46,6 @@ const rules = reactive({
   status: (v: string) => !!v || "Status is required",
 });
 
-const activatorContent = computed(() => {
-  if (props.isAddTask) {
-    return {
-      component: "v-btn",
-      props: {
-        text: "New Task",
-        prependIcon: "mdi-plus",
-        class: "text-none font-weight-regular",
-        variant: "tonal",
-      },
-    };
-  } else if (props.isEditTask) {
-    return {
-      component: "v-icon",
-      props: {
-        icon: "mdi-pencil-outline",
-        class: "cursor-pointer",
-      },
-    };
-  }
-  return {
-    component: null,
-    props: {},
-  };
-});
-
 const handleSubmit = async () => {
   if (!isValid.value) return;
 
@@ -89,11 +63,20 @@ const handleSubmit = async () => {
   <section>
     <v-dialog v-model="dialog" max-width="600">
       <template v-slot:activator="{ props: activatorProps }">
-        <component
-          v-if="activatorContent.component"
-          :is="activatorContent.component"
-          v-bind="{ ...activatorProps, ...activatorContent.props }"
-        ></component>
+        <v-btn
+          v-if="isAddTask"
+          class="text-none font-weight-regular"
+          prepend-icon="mdi-plus"
+          text="New Task"
+          variant="tonal"
+          v-bind="activatorProps"
+        />
+        <v-icon
+          v-if="isEditTask"
+          icon="mdi-pencil-outline"
+          class="cursor-pointer"
+          v-bind="activatorProps"
+        />
       </template>
 
       <v-card prepend-icon="mdi-note-edit-outline" title="Schedule Task">
