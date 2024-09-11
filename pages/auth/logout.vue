@@ -9,7 +9,7 @@ onMounted(() => {
   logOut();
   setTimeout(() => {
     navigateTo("/auth/login");
-  }, 2000);
+  }, 1500);
 });
 </script>
 

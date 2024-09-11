@@ -1,10 +1,4 @@
-import { useNuxtApp } from "nuxt/app";
 import { toast } from "vue3-toastify";
-import { storeToRefs } from "pinia";
-import { useTaskStore } from "../stores/taskStore";
-import useAuth from "./useAuth";
-import { ref } from "vue";
-import { logger } from "../utils/helpers";
 import { FirebaseError } from "firebase/app";
 import {
   doc,
@@ -39,10 +33,12 @@ export default function useTask() {
     } catch (err: any) {
       error.value = err;
       logger("Error fetching tasks ==>", error);
-      if (err instanceof FirebaseError) {
-        toast.error(`Fetch tasks failed: ${err.code}`);
-      } else {
-        toast.error(`Fetch tasks failed: ${err}`);
+      if (import.meta.client) {
+        const errorMsg =
+          err instanceof FirebaseError
+            ? `Fetch tasks failed: ${err.code}`
+            : `Fetch tasks failed: ${err}`;
+        toast.error(errorMsg);
       }
     } finally {
       isLoading.value = false;
@@ -53,15 +49,19 @@ export default function useTask() {
     isLoading.value = true;
     try {
       await addDoc(collection($db, `users/${userId.value}/tasks`), payload);
-      toast.success("Task added successfully!");
+      if (import.meta.client) {
+        toast.success("Task added successfully!");
+      }
       await fetchTasks();
     } catch (err: any) {
       error.value = err;
       logger("Error adding task ==>", error);
-      if (err instanceof FirebaseError) {
-        toast.error(`Add task failed: ${err.code}`);
-      } else {
-        toast.error(`Add task failed: ${err}`);
+      if (import.meta.client) {
+        const errorMsg =
+          err instanceof FirebaseError
+            ? `Add task failed: ${err.code}`
+            : `Add task failed: ${err}`;
+        toast.error(errorMsg);
       }
     } finally {
       isLoading.value = false;
@@ -76,15 +76,19 @@ export default function useTask() {
     try {
       const taskRef = doc($db, `users/${userId.value}/tasks`, taskId);
       await updateDoc(taskRef, updatedData);
-      toast.success("Task updated successfully!");
+      if (import.meta.client) {
+        toast.success("Task updated successfully!");
+      }
       await fetchTasks();
     } catch (err: any) {
       error.value = err;
       logger("Error updating task ==>", error);
-      if (err instanceof FirebaseError) {
-        toast.error(`Update task failed: ${err.code}`);
-      } else {
-        toast.error(`Update task failed: ${err}`);
+      if (import.meta.client) {
+        const errorMsg =
+          err instanceof FirebaseError
+            ? `Update task failed: ${err.code}`
+            : `Update task failed: ${err}`;
+        toast.error(errorMsg);
       }
     } finally {
       isLoading.value = false;
@@ -95,15 +99,19 @@ export default function useTask() {
     isLoading.value = true;
     try {
       await deleteDoc(doc($db, `users/${userId.value}/tasks`, taskId));
-      toast.success("Task deleted successfully!");
+      if (import.meta.client) {
+        toast.success("Task deleted successfully!");
+      }
       await fetchTasks();
     } catch (err: any) {
       error.value = err;
       logger("Error deleting task ==>", error);
-      if (err instanceof FirebaseError) {
-        toast.error(`Delete task failed: ${err.code}`);
-      } else {
-        toast.error(`Delete task failed: ${err}`);
+      if (import.meta.client) {
+        const errorMsg =
+          err instanceof FirebaseError
+            ? `Delete task failed: ${err.code}`
+            : `Delete task failed: ${err}`;
+        toast.error(errorMsg);
       }
     } finally {
       isLoading.value = false;

@@ -2,10 +2,7 @@
 
 <template>
   <div class="empty-layout">
-    <img
-      src="https://i.ebayimg.com/images/g/d3gAAOSwmm5mhkl0/s-l1600.webp"
-      alt="logo"
-    />
+    <img src="/images/logo.jpeg" alt="logo" />
     <slot />
   </div>
 </template>

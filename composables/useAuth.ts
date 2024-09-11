@@ -1,9 +1,4 @@
 import { toast } from "vue3-toastify";
-import { storeToRefs } from "pinia";
-import { useUserStore } from "../stores/userStore";
-import { ref } from "vue";
-import { navigateTo, useNuxtApp } from "nuxt/app";
-import { logger } from "../utils/helpers";
 import { FirebaseError } from "firebase/app";
 import { doc, setDoc, getDoc, type Firestore } from "firebase/firestore/lite";
 import {
@@ -36,17 +31,17 @@ export default function useAuth() {
         return;
       }
 
-      USER_STORE.updateProfile(docSnap.data() as MyProfile);
+      USER_STORE.myProfile = docSnap.data() as MyProfile;
     } catch (err: any) {
       error.value = err;
       logger("Error fetching user ==>", error);
 
       if (import.meta.client) {
-        if (err instanceof FirebaseError) {
-          toast.error(`Fetch profile failed: ${err.code}`);
-        } else {
-          toast.error(`Fetch profile failed: ${err}`);
-        }
+        const errorMsg =
+          err instanceof FirebaseError
+            ? `Fetch profile failed: ${err.code}`
+            : `Fetch profile failed: ${err}`;
+        toast.error(errorMsg);
       }
     }
   };
@@ -68,19 +63,20 @@ export default function useAuth() {
     } catch (err: any) {
       error.value = err;
       logger("Error signing up ==>", error);
+
       if (import.meta.client) {
-        if (err instanceof FirebaseError) {
-          toast.error(`Sign up failed: ${err.code}`);
-        } else {
-          toast.error(`Sign up failed: ${err}`);
-        }
+        const errorMsg =
+          err instanceof FirebaseError
+            ? `Sign up failed: ${err.code}`
+            : `Sign up failed: ${err}`;
+        toast.error(errorMsg);
       }
     } finally {
       isLoading.value = false;
     }
   };
 
-  const signIn = async (email: string, password: string, redirect = true) => {
+  const signIn = async (email: string, password: string) => {
     isLoading.value = true;
 
     try {
@@ -92,9 +88,7 @@ export default function useAuth() {
       USER_STORE.token = idToken;
       useCookie("token").value = idToken;
 
-      if (redirect) {
-        await nuxtApp.runWithContext(() => navigateTo("/"));
-      }
+      await nuxtApp.runWithContext(() => navigateTo("/"));
       if (import.meta.client) {
         toast.success("Sign in successful");
       }
@@ -104,11 +98,11 @@ export default function useAuth() {
       logger("Error signing in ==>", error);
 
       if (import.meta.client) {
-        if (err instanceof FirebaseError) {
-          toast.error(`Sign in failed: ${err.code}`);
-        } else {
-          toast.error(`Sign in failed: ${err}`);
-        }
+        const errorMsg =
+          err instanceof FirebaseError
+            ? `Sign in failed: ${err.code}`
+            : `Sign in failed: ${err}`;
+        toast.error(errorMsg);
       }
     } finally {
       isLoading.value = false;
@@ -118,18 +112,18 @@ export default function useAuth() {
   const initAuth = () => {
     try {
       onAuthStateChanged($auth, (state) => {
-        USER_STORE.updateAuthState(state);
+        USER_STORE.authState = state;
       });
     } catch (err: any) {
       error.value = err;
       logger("Error determining auth state ==>", error);
 
       if (import.meta.client) {
-        if (err instanceof FirebaseError) {
-          toast.error(`Auth state failed: ${err.code}`);
-        } else {
-          toast.error(`Auth state failed: ${err}`);
-        }
+        const errorMsg =
+          err instanceof FirebaseError
+            ? `Auth state failed: ${err.code}`
+            : `Auth state failed: ${err}`;
+        toast.error(errorMsg);
       }
     }
   };
@@ -142,7 +136,7 @@ export default function useAuth() {
           useCookie(cookieName).value = null;
         });
 
-        USER_STORE.clearUserData();
+        USER_STORE.resetUserData();
         await signOut($auth);
 
         if (import.meta.client) {
