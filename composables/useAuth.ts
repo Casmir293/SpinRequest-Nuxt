@@ -61,7 +61,7 @@ export default function useAuth() {
         password,
       );
       await setDoc(doc($db, "users", payload.user.uid), { name, email });
-      navigateTo("/auth/login");
+      await navigateTo("/auth/login");
       if (import.meta.client) {
         toast.success("Account Created! Sign in.");
       }
@@ -91,7 +91,6 @@ export default function useAuth() {
       USER_STORE.userId = payload.user.uid;
       USER_STORE.token = idToken;
       useCookie("token").value = idToken;
-      useCookie("profileID").value = payload.user.uid;
 
       if (redirect) {
         await nuxtApp.runWithContext(() => navigateTo("/"));
@@ -138,12 +137,14 @@ export default function useAuth() {
   const logOut = () => {
     nuxtApp.runWithContext(async () => {
       try {
-        const token = useCookie("token");
-        const profileID = useCookie("profileID");
-        token.value = "";
-        profileID.value = "";
+        const cookies = ["token", "task", "user"];
+        cookies.forEach((cookieName) => {
+          useCookie(cookieName).value = null;
+        });
+
         USER_STORE.clearUserData();
         await signOut($auth);
+
         if (import.meta.client) {
           localStorage.clear();
           sessionStorage.clear();
@@ -153,11 +154,11 @@ export default function useAuth() {
         logger("Error logging out ==>", error);
 
         if (import.meta.client) {
-          if (err instanceof FirebaseError) {
-            toast.error(`Logout failed: ${err.code}`);
-          } else {
-            toast.error(`Logout failed: ${err}`);
-          }
+          const errorMsg =
+            err instanceof FirebaseError
+              ? `Logout failed: ${err.code}`
+              : `Logout failed: ${err}`;
+          toast.error(errorMsg);
         }
       }
     });

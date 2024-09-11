@@ -8,14 +8,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return;
 
   const excludedRoutes = ["/auth/logout"];
-  const { userId, whoAmI } = useAuth();
+  const { USER, userId, whoAmI } = useAuth();
   const token = useCookie("token").value;
-  const profileID = useCookie("profileID").value;
 
-  if (token && userId && !excludedRoutes.includes(to.path)) {
+  if (token && USER.value && !excludedRoutes.includes(to.path)) {
     await new Promise<void>((resolve) => {
       nuxtApp.runWithContext(() => {
-        whoAmI(profileID).then(() => {
+        whoAmI(userId.value).then(() => {
           resolve();
         });
       });
