@@ -1,34 +1,29 @@
 <script setup lang="ts">
-import { toast } from "vue3-toastify";
-
 definePageMeta({
   middleware: "auth",
 });
 
 const { myProfile } = useAuth();
+const { fetchTasks } = useTask();
 
-function showToast() {
-  toast.success("This is a toast notification!");
-}
+onMounted(() => fetchTasks());
 </script>
 
 <template>
-  <h1 class="text-3xl font-bold underline">Hello world!</h1>
+  <main class="max-w-[95%] lg:max-w-[97%]">
+    <div class="mb-8 mr-2 bg-slate-200 p-4 text-center md:mr-0">
+      <h2 class="font-sans text-4xl font-bold">
+        Hello, {{ myProfile?.name }}!
+      </h2>
+      <p class="text-xl font-thin">
+        If you fail to plan, you're planing to fail.
+        <span class="font-normal">Make that plan TODAY 🫵</span>
+      </p>
+    </div>
 
-  <p class="my-5 text-2xl">
-    Welcome, <b>{{ myProfile?.name }}</b>
-  </p>
-  <v-btn
-    @click="showToast"
-    append-icon="mdi-account-circle"
-    prepend-icon="mdi-check-circle"
-  >
-    <template v-slot:prepend>
-      <v-icon color="success"></v-icon>
-    </template>
-    Click Me!
-    <template v-slot:append>
-      <v-icon color="warning"></v-icon>
-    </template>
-  </v-btn>
+    <div class="mr-2 md:mr-0">
+      <header-nav />
+      <status-column />
+    </div>
+  </main>
 </template>

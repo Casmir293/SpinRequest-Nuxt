@@ -8,7 +8,7 @@ import { logger } from "../utils/helpers";
 import { FirebaseError } from "firebase/app";
 import {
   doc,
-  setDoc,
+  addDoc,
   getDocs,
   updateDoc,
   deleteDoc,
@@ -28,13 +28,14 @@ export default function useTask() {
     isLoading.value = true;
     try {
       const querySnapshot = await getDocs(
-        collection($db, `users/${userId}/tasks`),
+        collection($db, `users/${userId.value}/tasks`),
       );
-      const taskList: Task[] = [];
-      querySnapshot.forEach((doc) => {
-        taskList.push({ id: doc.id, ...doc.data() } as Task);
+      const response = querySnapshot.docs.map((doc) => {
+        return { id: doc.id, ...doc.data() };
       });
-      TASK_STORE.updateTasks(taskList);
+      TASK_STORE.tasks = response as Task[];
+
+      return response;
     } catch (err: any) {
       error.value = err;
       logger("Error fetching tasks ==>", error);
@@ -48,13 +49,10 @@ export default function useTask() {
     }
   };
 
-  const addTask = async (task: Task) => {
+  const addTask = async (payload: TaskDataForm) => {
     isLoading.value = true;
     try {
-      const docRef = await setDoc(
-        doc(collection($db, `users/${userId}/tasks`)),
-        task,
-      );
+      await addDoc(collection($db, `users/${userId.value}/tasks`), payload);
       toast.success("Task added successfully!");
       await fetchTasks();
     } catch (err: any) {
@@ -70,12 +68,14 @@ export default function useTask() {
     }
   };
 
-  const updateTask = async (task: Task) => {
+  const updateTask = async (
+    taskId: string,
+    updatedData: Partial<TaskDataForm>,
+  ) => {
     isLoading.value = true;
     try {
-      await updateDoc(doc($db, `users/${userId}/tasks`, task.id), {
-        ...task,
-      });
+      const taskRef = doc($db, `users/${userId.value}/tasks`, taskId);
+      await updateDoc(taskRef, updatedData);
       toast.success("Task updated successfully!");
       await fetchTasks();
     } catch (err: any) {
@@ -94,7 +94,7 @@ export default function useTask() {
   const deleteTask = async (taskId: string) => {
     isLoading.value = true;
     try {
-      await deleteDoc(doc($db, `users/${userId}/tasks`, taskId));
+      await deleteDoc(doc($db, `users/${userId.value}/tasks`, taskId));
       toast.success("Task deleted successfully!");
       await fetchTasks();
     } catch (err: any) {
@@ -111,7 +111,7 @@ export default function useTask() {
   };
 
   return {
-    tasks,
+    TASKS: tasks,
     isLoading,
     fetchTasks,
     addTask,
