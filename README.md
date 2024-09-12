@@ -1,75 +1,61 @@
-# Nuxt 3 Minimal Starter
+# Plan-and-Do
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This is a Task Manager app built with a modern tech stack to help users manage and organize their tasks effectively. The app allows users to create, update, and delete tasks, with each user having access to their own set of tasks, ensuring privacy, authentication and data security. It can be accessed live at [Task Manager](https://spin-request-nuxt.vercel.app).
 
-## Setup
+## Features
 
-Make sure to install the dependencies:
+- User Authentication: Secure user authentication with Firebase, ensuring each user’s data is isolated.
+- Task Management: Create, update, and delete tasks. Tasks are categorized by status: Pending, In Progress, and Completed.
+- Real-time Data: Firebase Firestore integration allows for real-time updates, ensuring that users always see the latest data.
+- State Management: Pinia is used for state management, providing a seamless and reactive experience.
+- Responsive Design: Built with Tailwind CSS and Vuetify, the app is fully responsive and mobile-friendly.
 
-```bash
-# npm
-npm install
+## Tech Stack
 
-# pnpm
-pnpm install
+- Nuxt js: An open source framework that makes web development intuitive and powerful used for building the user interface.
+- Pinia: A state management library that works seamlessly with Nuxt.
+- Firebase: Used for backend services, including Firestore for database management and Firebase Authentication for user authentication.
+- TypeScript: Ensures type safety and enhanced code quality throughout the project.
+- Vuetify: A Material Design component framework used for building a clean and accessible UI.
+- Tailwind CSS: A utility-first CSS framework used for responsive and customizable designs.
 
-# yarn
-yarn install
+## Installation
 
-# bun
-bun install
-```
+To get started with the project, follow these steps:
 
-## Development Server
+1. Clone the repository:
 
-Start the development server on `http://localhost:3000`:
+   ```bash
+   git clone https://github.com/Casmir293/SpinRequest-Nuxt
 
-```bash
-# npm
-npm run dev
+   ```
 
-# pnpm
-pnpm run dev
+2. Navigate to the project directory:
 
-# yarn
-yarn dev
+   ```bash
+   cd SpinRequest-Nuxt
 
-# bun
-bun run dev
-```
+   ```
 
-## Production
+3. Install dependencies:
 
-Build the application for production:
+   ```bash
+   npm install
 
-```bash
-# npm
-npm run build
+   ```
 
-# pnpm
-pnpm run build
+4. Set up Firebase:
 
-# yarn
-yarn build
+- Create a Firebase project and configure Firestore and Firebase Authentication.
+- Add your Firebase configuration to your .env file.
 
-# bun
-bun run build
-```
+5. Run the development server:
 
-Locally preview production build:
+   ```bash
+   npm run dev
 
-```bash
-# npm
-npm run preview
+   ```
 
-# pnpm
-pnpm run preview
+## Contributing
 
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Contributions are welcome! If you have any suggestions or improvements, feel free to create a pull request or open an issue.
