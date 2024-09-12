@@ -1,4 +1,4 @@
-# Plan-and-Do
+# Task Manager
 
 This is a Task Manager app built with a modern tech stack to help users manage and organize their tasks effectively. The app allows users to create, update, and delete tasks, with each user having access to their own set of tasks, ensuring privacy, authentication and data security. It can be accessed live at [Task Manager](https://spin-request-nuxt.vercel.app).
 
