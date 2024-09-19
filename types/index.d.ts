@@ -36,9 +36,4 @@ declare global {
     name: string;
     email: string;
   }
-
-  interface ErrorResponse {
-    code: number;
-    message: string;
-  }
 }
